@@ -15,10 +15,12 @@ url = 'https://www.tixforgigs.com/de-de/Event/' + str(args.eventid)
 
 #print(url)
 
+random_sleep(5,10)
+
 alert_message = ''
 
 try:
-    response = url_open(url)
+    response = url_open(url, headers=random_header())
 except Exception as e:
     print('Error: Could not open URL')
     print(str(e))

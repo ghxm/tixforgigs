@@ -7,7 +7,22 @@ import smtplib
 from email.mime.text import MIMEText
 import ssl
 import config
+import random
 
+def random_sleep(low, high):
+    time.sleep(random.randint(low,high))
+
+
+# generates a random header for urllib
+def random_header():
+    agents = [
+        ('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.3'),
+        ('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/43.4'),
+        ('User-Agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36'),
+        ('User-Agent', 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko)')
+    ]
+    return [random.choice(agents)] + [("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"),
+                                       ("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8")]
 
 
 def fatal_code(e):
