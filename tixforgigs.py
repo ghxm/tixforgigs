@@ -5,7 +5,7 @@ from helpers import *
 import re
 
 parser = argparse.ArgumentParser(description='Check for ticket availability for a given event.')
-parser.add_argument('eventid', type=int, help='Event ID', default=41847)
+parser.add_argument('eventid', type=int, help='Event ID')
 parser.add_argument('-r', '--recipients', required=True, nargs='+', help='Verbose output')
 parser.add_argument('--test', action='store_true', help='Test mode', default=False)
 
