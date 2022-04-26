@@ -55,8 +55,8 @@ if event_script_line is None:
     print('Error: Could not find event script line')
     exit()
 
-ticket_json = re.split('(?={)', string=event_script_line, maxsplit=1)[1]
-ticket_json = re.sub('(?<=\})[;)]*$', '', ticket_json)
+ticket_json = re.split('.+?(?={)', string=event_script_line, maxsplit=1)[1]
+ticket_json = re.sub('(?<=\})[;)]+$', '', ticket_json)
 
 json_data = json.loads(ticket_json)
 

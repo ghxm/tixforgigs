@@ -9,6 +9,7 @@ import ssl
 import config
 
 
+
 def fatal_code(e):
     try:
         return 400 <= e.code < 500 and e.code not in [408, 401, 409, 405, 503, 500]
