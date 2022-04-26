@@ -13,7 +13,7 @@ args = parser.parse_args()
 
 url = 'https://www.tixforgigs.com/de-de/Event/' + str(args.eventid)
 
-print(url)
+#print(url)
 
 alert_message = ''
 

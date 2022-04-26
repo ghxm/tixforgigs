@@ -32,7 +32,7 @@ def send_mail(subject, body, to, sender):
     context = ssl.create_default_context()
 
     with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-        server.login(gmail_login, gmail_password)
+        server.login(config.gmail_login, config.gmail_password)
 
         for recipient in to:
 
