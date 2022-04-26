@@ -7,6 +7,7 @@ import re
 parser = argparse.ArgumentParser(description='Check for ticket availability for a given event.')
 parser.add_argument('eventid', type=int, help='Event ID')
 parser.add_argument('-r', '--recipients', required=True, nargs='+', help='Verbose output')
+parser.add_argument('-s', '--sleep', action='store_true', help='Sleep between 5 and 10 minutes before requests')
 parser.add_argument('--test', action='store_true', help='Test mode', default=False)
 
 args = parser.parse_args()
@@ -15,7 +16,9 @@ url = 'https://www.tixforgigs.com/de-de/Event/' + str(args.eventid)
 
 #print(url)
 
-random_sleep(5,10)
+print('sleeping for a while...')
+if args.sleep:
+    random_sleep(5,10)
 
 alert_message = ''
 
