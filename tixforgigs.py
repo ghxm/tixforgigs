@@ -90,8 +90,12 @@ if alert_message != '' or args.test:
 
     print('sending email...')
     # send e-mail to recipients
-    for recipient in args.recipients:
 
-        send_mail("TIXFORGIGS event " + str(args.eventid) + ' news', alert_message, recipient, sender='mh.max.haag@googlemail.com')
+    try:
+        send_mail("TIXFORGIGS event " + str(args.eventid) + ' news', alert_message, args.recipients, sender='mh.max.haag@googlemail.com')
+    except Exception as e:
+        print('Error: Could not send e-mail')
+        print(str(e))
+
 
     print('done')
