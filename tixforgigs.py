@@ -6,7 +6,7 @@ import re
 
 parser = argparse.ArgumentParser(description='Check for ticket availability for a given event.')
 parser.add_argument('eventid', type=int, help='Event ID')
-parser.add_argument('-r', '--recipients', required=True, nargs='+', help='Verbose output')
+parser.add_argument('-r', '--recipients', required=True, nargs='+', help='Recipient e-mail addresses')
 parser.add_argument('-s', '--sleep', action='store_true', help='Sleep between 5 and 10 minutes before requests')
 parser.add_argument('--test', action='store_true', help='Test mode', default=False)
 
@@ -90,5 +90,8 @@ if alert_message != '' or args.test:
 
     print('sending email...')
     # send e-mail to recipients
-    send_mail("TIXFORGIGS event " + str(args.eventid) + ' news', alert_message, args.recipients, sender='mh.max.haag@googlemail.com')
+    for recipient in args.recipients:
+
+        send_mail("TIXFORGIGS event " + str(args.eventid) + ' news', alert_message, recipient, sender='mh.max.haag@googlemail.com')
+
     print('done')
