@@ -15,6 +15,8 @@ parser.add_argument('-l', '--log', help='Log file used for determining send hist
 
 args = parser.parse_args()
 
+args.eventid = str(args.eventid)
+
 url = 'https://www.tixforgigs.com/de-de/Event/' + str(args.eventid)
 
 # read in config file if it exists
