@@ -3,22 +3,30 @@ import json
 import argparse
 from helpers import *
 import re
+import os
+import datetime
 
 parser = argparse.ArgumentParser(description='Check for ticket availability for a given event.')
 parser.add_argument('eventid', type=int, help='Event ID')
 parser.add_argument('-r', '--recipients', required=True, nargs='+', help='Recipient e-mail addresses')
 parser.add_argument('-s', '--sleep', action='store_true', help='Sleep between 5 and 10 minutes before requests')
 parser.add_argument('--test', action='store_true', help='Test mode', default=False)
+parser.add_argument('-l', '--log', help='Log file used for determining send history', default='log.json')
 
 args = parser.parse_args()
 
 url = 'https://www.tixforgigs.com/de-de/Event/' + str(args.eventid)
 
-#print(url)
+# read in config file if it exists
+log = {}
 
-print('sleeping for a while...')
-if args.sleep:
-    random_sleep(5,10)
+if os.path.isfile(args.log):
+    with open(args.log) as f:
+        log = json.load(f)
+else:
+    print('Warning: Could not find log file')
+
+
 
 alert_message = ''
 
@@ -84,18 +92,81 @@ for product in products:
 if 'ticketResaleAvailability' in json_data and json_data['ticketResaleAvailability'] is not None:
     alert_message += '\nTicket resale available at ' + url
 
+# determine whether or not to include recipients in the email
+if 'recipients' in log:
+    for recipient in args.recipients:
+        if recipient not in log['recipients'].keys():
+
+            log['recipients'][recipient] = {}
+
+            log['recipients'][recipient][args.eventid] = {
+                'last_state': None,
+                'last_alert': None
+            }
+        elif args.eventid not in log['recipients'][recipient].keys():
+            log['recipients'][recipient][args.eventid] = {
+                'last_state': None,
+                'last_alert': None
+            }
+else:
+    log['recipients'] = {}
+    for recipient in args.recipients:
+
+        log['recipients'][recipient] = {}
+
+        log['recipients'][recipient][args.eventid] = {
+            'last_state': None,
+            'last_alert': None
+        }
+
+# only include recipients that had a soldout for the last check or have not been alerted in the last 24 hours
+recipients = []
+
+for recipient in args.recipients:
+    if log['recipients'][recipient][args.eventid]['last_state'] != 'available' or (log['recipients'][recipient][args.eventid]['last_state'] == 'available' and log['recipients'][recipient][args.eventid]['last_alert'] is not None and (datetime.datetime.now() - datetime.datetime.strptime(log['recipients'][recipient][args.eventid]['last_alert'], '%Y-%m-%d %H:%M:%S')).total_seconds() > 86400) or args.test:
+        recipients.append(recipient)
+
+
 if alert_message != '' or args.test:
+
     if args.test:
         alert_message = 'THIS IS ONLY A TEST MAIL! \n ' + alert_message
 
     print('sending email...')
     # send e-mail to recipients
 
+    now = datetime.datetime.now()
+
     try:
         send_mail("TIXFORGIGS event " + str(args.eventid) + ' news', alert_message, args.recipients, sender='mh.max.haag@googlemail.com')
     except Exception as e:
         print('Error: Could not send e-mail')
         print(str(e))
+        exit()
+
+    # update log
+    if not args.test:
+
+        print('updating log...')
+
+        for recipient in log['recipients'].keys():
+            log['recipients'][recipient][args.eventid]['last_state'] = 'available'
+            log['recipients'][recipient][args.eventid]['last_alert'] = now.strftime('%Y-%m-%d %H:%M:%S')
+
+        with open(args.log, 'w') as f:
+            json.dump(log, f)
+
+else:
+    print('no tickets available')
+
+    # update log
+    for recipient in log['recipients'].keys():
+        log['recipients'][recipient][args.eventid]['last_state'] = 'soldout'
+
+    if not args.test:
+        print('updating log...')
+        with open(args.log, 'w') as f:
+            json.dump(log, f)
 
 
     print('done')
