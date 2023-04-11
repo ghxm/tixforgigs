@@ -140,7 +140,7 @@ if alert_message != '' or args.test:
     now = datetime.datetime.now()
 
     try:
-        send_mail("TIXFORGIGS event " + str(args.eventid) + ' news', alert_message, args.recipients, sender='mh.max.haag@googlemail.com')
+        send_mail("TIXFORGIGS event " + str(args.eventid) + ' news', alert_message, recipients, sender='mh.max.haag@googlemail.com')
     except Exception as e:
         print('Error: Could not send e-mail')
         print(str(e))
