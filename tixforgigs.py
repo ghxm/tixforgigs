@@ -17,7 +17,14 @@ args = parser.parse_args()
 
 args.eventid = str(args.eventid)
 
-url = 'https://www.tixforgigs.com/de-de/Event/' + str(args.eventid)
+def event_url(id, lang="en-gb"):
+    return 'https://www.tixforgigs.com/' + lang + '/Event/' + str(id)
+
+def resale_url(id, lang = "en-gb"):
+    return 'https://www.tixforgigs.com/' + lang + '/Resale/' + str(id)
+
+
+url = event_url(args.eventid)
 
 # read in config file if it exists
 log = {}
@@ -89,10 +96,16 @@ for product in products:
 
     if product_is_ticket:
         if not product['soldOut']:
-            alert_message += '\nTicket available for ' + product['title'] + ' at ' + url
+            alert_message += '\nTicket available for ' + product['title'] + ' at ' + event_url(args.eventid)
 
 if 'ticketResaleAvailability' in json_data and json_data['ticketResaleAvailability'] is not None:
-    alert_message += '\nTicket resale available at ' + url
+    alert_message += '\nTicket resale available at ' + resale_url(args.eventid)
+
+# try to get event title
+try:
+    event_title = bs.find("meta", property="og:title")['content']
+except:
+    event_title = args.eventid
 
 # determine whether or not to include recipients in the email
 if 'recipients' in log:
@@ -140,7 +153,7 @@ if alert_message != '' or args.test:
     now = datetime.datetime.now()
 
     try:
-        send_mail("TIXFORGIGS event " + str(args.eventid) + ' news', alert_message, recipients, sender='mh.max.haag@googlemail.com')
+        send_mail("TIXFORGIGS event " + str(event_title) + ' news', alert_message, recipients, sender='mh.max.haag@googlemail.com')
     except Exception as e:
         print('Error: Could not send e-mail')
         print(str(e))
