@@ -17,12 +17,6 @@ args = parser.parse_args()
 
 args.eventid = str(args.eventid)
 
-def event_url(id, lang="en-gb"):
-    return 'https://www.tixforgigs.com/' + lang + '/Event/' + str(id)
-
-def resale_url(id, lang = "en-gb"):
-    return 'https://www.tixforgigs.com/' + lang + '/Resale/' + str(id)
-
 
 url = event_url(args.eventid)
 

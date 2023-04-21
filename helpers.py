@@ -57,3 +57,9 @@ def send_mail(subject, body, to, sender):
 
             server.sendmail(sender, recipient, msg.as_string())
 
+
+def event_url(id, lang="en-gb"):
+    return 'https://www.tixforgigs.com/' + lang + '/Event/' + str(id)
+
+def resale_url(id, lang = "en-gb"):
+    return 'https://www.tixforgigs.com/' + lang + '/Resale/' + str(id)
