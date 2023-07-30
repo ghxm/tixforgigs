@@ -167,7 +167,7 @@ if alert_message != '' or args.test:
         print('updating log...')
 
         for recipient in log['recipients'].keys():
-            if recipient in recipients:
+            if recipient in args.recipients:
                 log['recipients'][recipient][args.eventid]['last_state'] = 'available'
                 log['recipients'][recipient][args.eventid]['last_alert'] = now.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -179,7 +179,8 @@ else:
 
     # update log
     for recipient in log['recipients'].keys():
-        log['recipients'][recipient][args.eventid]['last_state'] = 'soldout'
+        if recipient in args.recipients:
+            log['recipients'][recipient][args.eventid]['last_state'] = 'soldout'
 
     if not args.test:
         print('updating log...')
