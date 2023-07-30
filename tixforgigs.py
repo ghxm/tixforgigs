@@ -144,7 +144,7 @@ if alert_message != '' or args.test:
     if args.test:
         alert_message = 'THIS IS ONLY A TEST MAIL! \n ' + alert_message
 
-    print('sending email...')
+    print('sending email to ' + str(len(recipients)) + ' recipients: ' + str(recipients))
     # send e-mail to recipients
 
     now = datetime.datetime.now()
