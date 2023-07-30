@@ -9,7 +9,7 @@ import datetime
 parser = argparse.ArgumentParser(description='Check for ticket availability for a given event.')
 parser.add_argument('eventid', type=int, help='Event ID')
 parser.add_argument('-r', '--recipients', required=True, nargs='+', help='Recipient e-mail addresses')
-parser.add_argument('-e', '--exclude', required=False, nargs='+', help='Exclude tickets that match pattern')
+parser.add_argument('-e', '--exclude', required=False, nargs='+', help='Exclude tickets that match pattern', default=[])
 parser.add_argument('-s', '--sleep', action='store_true', help='Sleep between 5 and 10 minutes before requests')
 parser.add_argument('--test', action='store_true', help='Test mode', default=False)
 parser.add_argument('-l', '--log', help='Log file used for determining send history', default='log.json')
